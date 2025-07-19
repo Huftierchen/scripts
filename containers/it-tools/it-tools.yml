@@ -3,5 +3,5 @@ services:
     image: corentinth/it-tools:latest
     container_name: it-tools
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "10001:80"
