@@ -5,5 +5,3 @@ services:
     restart: unless-stopped
     expose:
       - "80"
-    networks:
-      - appserver-net

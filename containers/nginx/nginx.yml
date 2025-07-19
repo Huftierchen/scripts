@@ -13,5 +13,3 @@ services:
       - /mnt/appserver/nginx/data:/data
       - /mnt/appserver/nginx/certs:/custom-certs
       - /mnt/appserver/nginx/letsencrypt:/etc/letsencrypt
-    networks:
-      - appserver-net
