@@ -18,7 +18,7 @@ services:
       - "10040:3000"
 
   mongodb:
-    image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-6.0}
+    image: docker.io/arm64v8/mongo:${MONGODB_VERSION:-6.0}
     restart: always
     user: 1000:1000
     volumes:
