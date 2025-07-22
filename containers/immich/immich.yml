@@ -21,8 +21,6 @@ services:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - .env
     ports:
       - '10030:2283'
     depends_on:
@@ -42,8 +40,6 @@ services:
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
       - model-cache:/cache
-    env_file:
-      - .env
     restart: always
     healthcheck:
       disable: false
@@ -54,7 +50,6 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
-
   database:
     container_name: immich_postgres
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
