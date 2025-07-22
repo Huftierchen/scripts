@@ -8,9 +8,16 @@ services:
       - POSTGRES_DB
       - POSTGRES_NON_ROOT_USER
       - POSTGRES_NON_ROOT_PASSWORD
+      - PUID: 1000
+      - PGID: 1000
     volumes:
       - /mnt/appserver/n8n/db:/var/lib/postgresql/data
       - /mnt/appserver/n8n/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -29,4 +36,5 @@ services:
     volumes:
       - /mnt/appserver/n8n/data:/home/node/.n8n
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
