@@ -11,11 +11,6 @@ services:
     volumes:
       - /mnt/appserver/n8n/db:/var/lib/postgresql/data
       - /mnt/appserver/n8n/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 20
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -34,5 +29,4 @@ services:
     volumes:
       - /mnt/appserver/n8n/data:/home/node/.n8n
     depends_on:
-      postgres:
-        condition: service_healthy
+      postgres
