@@ -20,6 +20,7 @@ services:
   mongodb:
     image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-6.0}
     restart: always
+    user: 1000:1000
     volumes:
       - ${MONGODB_HOST_PATH:-mongodb_data}:/bitnami/mongodb
     environment:
