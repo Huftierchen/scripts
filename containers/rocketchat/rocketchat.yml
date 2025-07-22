@@ -3,7 +3,7 @@ volumes:
 
 services:
   rocketchat:
-    image: ${IMAGE:-registry.rocket.chat/rocketchat/rocket.chat}:${RELEASE:-latest}
+    image: esme518/docker-rocketchat-arm64:latest
     restart: always
     environment:
       MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
