@@ -1,7 +1,6 @@
 services:
   watchtower:
     image: containrrr/watchtower
-    user: 1000:1000
     environment:
       - WATCHTOWER_NOTIFICATIONS_LEVEL=info
       - WATCHTOWER_MONITOR_ONLY=false
