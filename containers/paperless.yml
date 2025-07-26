@@ -31,6 +31,17 @@ services:
       - /mnt/appserver/paperless/media:/usr/src/paperless/media
       - /mnt/appserver/paperless/export:/usr/src/paperless/export
       - /mnt/appserver/paperless/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_OCR_LANGUAGES: deu eng
+      PAPERLESS_OCR_LANGUAGE: =deu
+      COMPOSE_HTTP_TIMEOU: 300
+      PAPERLESS_TIME_ZONE: Europe/Berlin
+      PAPERLESS_URL: https://paper.huftierchen.de
   gotenberg:
     image: docker.io/gotenberg/gotenberg:8.20
     restart: unless-stopped
