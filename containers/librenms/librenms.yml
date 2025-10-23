@@ -1,6 +1,7 @@
 services:
   db:
     image: mariadb:10
+    user: 1000:1000
     container_name: librenms_db
     command:
       - "mysqld"
