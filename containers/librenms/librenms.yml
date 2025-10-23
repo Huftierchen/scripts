@@ -1,0 +1,198 @@
+services:
+  db:
+    image: mariadb:10
+    container_name: librenms_db
+    command:
+      - "mysqld"
+      - "--innodb-file-per-table=1"
+      - "--lower-case-table-names=0"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    volumes:
+      - /mnt/appserver/librenms/db:/var/lib/mysql
+    environment:
+      - TZ
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    restart: always
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: librenms_redis
+    environment:
+      - TZ
+    restart: always
+
+  msmtpd:
+    image: crazymax/msmtpd:latest
+    container_name: librenms_msmtpd
+    environment:
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_TLS
+      - SMTP_STARTTLS
+      - SMTP_TLS_CHECKCERT
+      - SMTP_AUTH
+      - SMTP_USER
+      - SMTP_PASSWORD
+      - SMTP_FROM
+    restart: always
+
+  librenms:
+    image: librenms/librenms:latest
+    container_name: librenms
+    hostname: librenms
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+      - msmtpd
+    volumes:
+      - /mnt/appserver/librenms/data:/data
+    environment:
+      - TZ
+      - PUID
+      - PGID
+      - DB_HOST=db
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_TIMEOUT=60
+      - MEMORY_LIMIT=256M
+      - MAX_INPUT_VARS=1000
+      - UPLOAD_MAX_SIZE=16M
+      - OPCACHE_MEM_SIZE=128
+      - REAL_IP_FROM=0.0.0.0/32
+      - REAL_IP_HEADER=X-Forwarded-For
+      - LOG_IP_VAR=remote_addr
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - LIBRENMS_SNMP_COMMUNITY
+      - LIBRENMS_WEATHERMAP=false
+      - LIBRENMS_WEATHERMAP_SCHEDULE=*/5 * * * *
+    restart: always
+
+  dispatcher:
+    image: librenms/librenms:latest
+    container_name: librenms_dispatcher
+    hostname: librenms-dispatcher
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    volumes:
+      - /mnt/appserver/librenms/data:/data
+    environment:
+      - TZ
+      - PUID
+      - PGID
+      - DB_HOST=db
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_TIMEOUT=60
+      - DISPATCHER_NODE_ID=dispatcher1
+      - SIDECAR_DISPATCHER=1
+      - MEMORY_LIMIT=256M
+      - MAX_INPUT_VARS=1000
+      - UPLOAD_MAX_SIZE=16M
+      - OPCACHE_MEM_SIZE=128
+      - REAL_IP_FROM=0.0.0.0/32
+      - REAL_IP_HEADER=X-Forwarded-For
+      - LOG_IP_VAR=remote_addr
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - LIBRENMS_SNMP_COMMUNITY
+      - LIBRENMS_WEATHERMAP=false
+      - LIBRENMS_WEATHERMAP_SCHEDULE=*/5 * * * *
+    restart: always
+
+  syslogng:
+    image: librenms/librenms:latest
+    container_name: librenms_syslogng
+    hostname: librenms-syslogng
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    ports:
+      - 514:514/tcp
+      - 514:514/udp
+    volumes:
+      - /mnt/appserver/librenms/data:/data
+    environment:
+      - TZ
+      - PUID
+      - PGID
+      - DB_HOST=db
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_TIMEOUT=60
+      - SIDECAR_SYSLOGNG=1
+      - MEMORY_LIMIT=256M
+      - MAX_INPUT_VARS=1000
+      - UPLOAD_MAX_SIZE=16M
+      - OPCACHE_MEM_SIZE=128
+      - REAL_IP_FROM=0.0.0.0/32
+      - REAL_IP_HEADER=X-Forwarded-For
+      - LOG_IP_VAR=remote_addr
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - LIBRENMS_SNMP_COMMUNITY
+      - LIBRENMS_WEATHERMAP=false
+      - LIBRENMS_WEATHERMAP_SCHEDULE=*/5 * * * *
+    restart: always
+
+  snmptrapd:
+    image: librenms/librenms:latest
+    container_name: librenms_snmptrapd
+    hostname: librenms-snmptrapd
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    ports:
+      - 162:162/tcp
+      - 162:162/udp
+    volumes:
+      - /mnt/appserver/librenms/data:/data
+    environment:
+      - TZ
+      - PUID
+      - PGID
+      - DB_HOST=db
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_TIMEOUT=60
+      - SIDECAR_SNMPTRAPD=1
+      - MEMORY_LIMIT=256M
+      - MAX_INPUT_VARS=1000
+      - UPLOAD_MAX_SIZE=16M
+      - OPCACHE_MEM_SIZE=128
+      - REAL_IP_FROM=0.0.0.0/32
+      - REAL_IP_HEADER=X-Forwarded-For
+      - LOG_IP_VAR=remote_addr
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - LIBRENMS_SNMP_COMMUNITY
+      - LIBRENMS_WEATHERMAP=false
+      - LIBRENMS_WEATHERMAP_SCHEDULE=*/5 * * * *
+    restart: always
