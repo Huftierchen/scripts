@@ -4,6 +4,8 @@ services:
     container_name: plex
     user: 1000:1000
     environment:
+      - PLEX_UID=1000
+      - PLEX_GID=1000
       - TZ=Europe/Berlin
       - VERSION=docker
       - PLEX_CLAIM=${PLEX_CLAIM}
@@ -11,5 +13,7 @@ services:
       - 10070:32400
     volumes:
       - /mnt/appserver/plex/config:/config
+      - /mnt/appserver/plex/run:/run
+      - /mnt/appserver/plex/transcode:/transcode
       - /mnt/media:/ponysmedia
     restart: unless-stopped
