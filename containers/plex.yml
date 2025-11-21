@@ -4,8 +4,6 @@ services:
     container_name: plex
     user: 1000:1000
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Europe/Berlin
       - VERSION=docker
       - PLEX_CLAIM=${PLEX_CLAIM}
