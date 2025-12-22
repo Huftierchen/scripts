@@ -1,6 +1,6 @@
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     environment:
       - WATCHTOWER_NOTIFICATIONS_LEVEL=info
       - WATCHTOWER_MONITOR_ONLY=false
