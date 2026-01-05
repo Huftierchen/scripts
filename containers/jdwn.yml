@@ -1,0 +1,20 @@
+services:
+  jdownloader-2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - USER_ID=1000
+      - GROUP_ID=1000
+      - TZ=Europe/Berlin
+      - DARK_MODE=1
+      - LANG=de_DE.UTF-8
+      - JDOWNLOADER_MAX_MEM=1024M
+    ports:
+      - 10120:5800
+      - 10121:3129
+    volumes:
+      - /mnt/appserver/jdownloader/config:/config
+      - /mnt/appserver/jdownloader/downloads:/output
+    restart: unless-stopped
