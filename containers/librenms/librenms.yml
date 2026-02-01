@@ -29,6 +29,8 @@ services:
   msmtpd:
     image: crazymax/msmtpd:latest
     container_name: librenms_msmtpd
+    healthcheck:
+      disable: true
     environment:
       - SMTP_HOST
       - SMTP_PORT
