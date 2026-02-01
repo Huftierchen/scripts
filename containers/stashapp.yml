@@ -38,7 +38,7 @@ services:
       - /mnt/appserver/stashapp/config:/root/.stash
       ## Point this at your collection.
       ## The left side is where your collection is on your host, the right side is where it will be in stash.
-      - /mnt/media/tv/Latex:/data:ro
+      - /mnt/media/tv/Kinky:/data:ro
       ## This is where your stash's metadata lives
       - /mnt/appserver/stashapp/metadata:/metadata
       ## Any other cache content.
